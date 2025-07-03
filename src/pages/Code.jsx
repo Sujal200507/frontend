@@ -8,7 +8,6 @@ import axios from "axios";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 // import "highlight.js/styles/github-dark.css";
-const backendurl = import.meta.env.VITE_BACKEND_URL;
 
 function Code() {
   const [code, setCode] = useState(`
@@ -20,7 +19,7 @@ function fetchData() {
   const [review, setreview] = useState("");
   const ReviewCode = async () => {
     try {
-      let response = await axios.post(`${backendurl}/ai/get-response`, {
+      let response = await axios.post('/api/ai', {
         code,
       });
       console.log(response.data);

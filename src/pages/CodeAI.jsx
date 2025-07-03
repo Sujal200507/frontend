@@ -3,15 +3,12 @@ import axios from "axios";
 import Navbar from "../Components/Navbar";
 import Loading from "../Components/Loading";
 import Markdowns from "../Components/Markdown";
-import BackendLoader from "../Components/BackendLoader";
-const backendurl = import.meta.env.VITE_BACKEND_URL;
 
 function CodeAI() {
   const [code, setCode] = useState(``);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
   const [display, setDisplay] = useState(false);
-  const [isBackendReady, setIsBackendReady] = useState(false);
 
   const responseAreaRef = useRef(null);
   const handleSubmit = async () => {
@@ -21,8 +18,7 @@ function CodeAI() {
     setLoading(true);
     setDisplay(true);
     try {
-      let res = await axios.post(
-        `${backendurl}/ai/get-response`,
+      let res = await axios.post('/api/ai',
         {
           code,
         }
@@ -40,28 +36,9 @@ function CodeAI() {
     if (!loading && response) {
       responseAreaRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-    const startWebsite = async () => {
-      try {
-        let response = await axios.get(
-          `${backendurl}/`
-        );
-        console.log(response.data);
-        if (response.data.status === "ok") {
-          setIsBackendReady(true);
-        }
-      } catch (error) {
-        console.error("Failed to get response:", error);
-        setIsBackendReady(false);
-        setTimeout(() => {
-          startWebsite();
-        }, 3000);
-      }
-    };
-
-    startWebsite();
   }, [loading, response]);
 
-  return isBackendReady ? (
+  return (
     <>
       <Navbar />
       <div className="w-full min-h-screen text-zinc-50 bg-[#0D1117]">
@@ -153,8 +130,6 @@ function CodeAI() {
         </div>
       </div>
     </>
-  ) : (
-    <BackendLoader />
   );
 }
 
